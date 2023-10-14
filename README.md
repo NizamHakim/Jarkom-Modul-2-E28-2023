@@ -118,7 +118,7 @@ File-file ini harus ada pada /root masing-masing node
   ```
 ### NakulaClient dan SadewaClient
 - **nameserver.sh**
-  ```
+  ```shell
   # DNS Master
   echo nameserver 192.220.2.2 > /etc/resolv.conf
   # DNS Slave
