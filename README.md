@@ -447,37 +447,10 @@ File-file ini harus ada pada `/root` masing-masing node. File-file yang ada di `
   ```
 - **parikesit-htaccess**
   ```
-  <VirtualHost *:80>
-        ServerName parikesit.abimanyu.E28.com
-        ServerAlias www.parikesit.abimanyu.E28.com
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/parikesit.abimanyu.E28
-
-        <Directory /var/www/parikesit.abimanyu.E28/public>
-                Options +Indexes
-        </Directory>
-
-        <Directory /var/www/parikesit.abimanyu.E28/secret>
-                Options -Indexes
-        </Directory>
-
-        ErrorDocument 403 /error/403.html
-        ErrorDocument 404 /error/404.html
-
-        <Directory /var/www/parikesit.abimanyu.E28/public/js>
-                Options +Indexes
-        </Directory>
-
-        Alias "/js" "/var/www/parikesit.abimanyu.E28/public/js"
-
-        <Directory /var/www/parikesit.abimanyu.E28>
-                Options +FollowSymLinks -Multiviews
-                AllowOverride All
-        </Directory>
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-  </VirtualHost>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} ^/public/images/(.*)(abimanyu)(.*\.(png|jpg))
+  RewriteCond %{REQUEST_URI} !/public/images/abimanyu.png
+  RewriteRule abimanyu http://parikesit.abimanyu.E28.com/public/images/abimanyu.png$1 [L,R=301]
   ```
 - **rjp.baratayuda.abimanyu-apache-block**
   ```
@@ -874,6 +847,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.abimanyu.E28.com.
 lynx www.abimanyu.E28.com
 ```
 Menampilkan `index.html` yang ada di `/var/www/abimanyu.E28`.  
+
 ![](/images/lynx-abimanyu.png)
 
 ### No 12
@@ -896,6 +870,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.abimanyu.E28.com/home.
 lynx www.abimanyu.E28.com/home
 ```
 Menampilkan `index.html` yang ada di `/var/www/abimanyu.E28`  
+
 ![](/images/lynx-abimanyu.png)
 
 ### No 13
@@ -947,6 +922,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com.
 lynx www.parikesit.abimanyu.E28.com
 ```
 Menampilkan folder-folder yang yang ada di `/var/www/parikesit.abimanyu.E28`  
+
 ![](/images/lynx-parikesit.abimanyu.png)
 
 ### No 14
@@ -972,13 +948,15 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/
 lynx www.parikesit.abimanyu.E28.com/public
 ```
 Menampilkan folder-folder yang yang ada di `/var/www/parikesit.abimanyu.E28/public`  
+
 ![](/images/public.png)
 
 Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/secret.  
 ```shell
 lynx www.parikesit.abimanyu.E28.com/secret
 ```
-Menampilkan laman forbidden 403  
+Menampilkan laman forbidden 403.  
+
 ![](/images/secret.png)
 
 ### No 15
@@ -998,6 +976,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/
 lynx www.parikesit.abimanyu.E28.com/secret
 ```
 Menampilkan halaman forbidden 403 yang telah dikustomisasi.  
+
 ![](/images/secret.png)
 
 Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/asdf.  
@@ -1005,6 +984,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/
 lynx www.parikesit.abimanyu.E28.com/asdf
 ```
 Menampilkan halaman not found 404 yang telah dikustomisasi.  
+
 ![](/images/asdf.png)
 
 ### No 16
@@ -1027,6 +1007,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/
 lynx www.parikesit.abimanyu.E28.com/js
 ```
 Menampilkan isi dari /var/www/parikesit.abimanyu.E28/public/js.  
+
 ![](/images/js.png)
 
 ### No 17
@@ -1067,42 +1048,158 @@ Listen 14400
 </IfModule>
 ```
 
+Copy `rjp.baratayuda.abimanyu-apache-block` ke `/etc/apache2/sites-available` dan `ports-apache.conf` ke `/etc/apache2/ports.conf`.  
+```shell
+cp /root/rjp.baratayuda.abimanyu-apache-block /etc/apache2/sites-available/rjp.baratayuda.abimanyu.E28.com.conf
+cp /root/ports-apache.conf /etc/apache2/ports.conf
+```
+
+File-file dari rjp.baratayuda.abimanyu.E28.com diatur pada directory `/var/www/rjp.baratayuda.abimanyu.E28`. Buat directory `/var/www/rjp.baratayuda.abimanyu.E28` kemudian copy files dari `/root/rjp.baratayuda.abimanyu.yyy.com` dan paste ke dalamnya.  
+```shell
+mkdir /var/www/rjp.baratayuda.abimanyu.E28
+cp /root/rjp.baratayuda.abimanyu.yyy.com/* /var/www/rjp.baratayuda.abimanyu.E28
+```
+
+Aktifkan website.    
+```shell
+a2ensite rjp.baratayuda.abimanyu.E28.com
+```
+
 #### Testing:  
 Gunakan `lynx` pada NakulaClient untuk mengakses www.rjp.baratayuda.abimanyu.E28.com melalui port 14000 atau 14400.  
-```
+```shell
 lynx www.rjp.baratayuda.abimanyu.E28.com:14000
 lynx www.rjp.baratayuda.abimanyu.E28.com:14400
 ```
 Menampilkan isi dari /var/www/rjp.baratayuda.abimanyu.E28.  
+
 ![](/images/rjp.png)
 
 Gunakan `lynx` pada NakulaClient untuk mengakses www.rjp.baratayuda.abimanyu.E28.com melalui port selain 14000 dan 14400.  
-```
+```shell
 lynx www.rjp.baratayuda.abimanyu.E28.com:8080
 ```
 Menampilkan halaman error karena port tidak sesuai.  
+
 ![](/images/rjp-error.png)
 
 ### No 18
 > Untuk mengaksesnya buatlah autentikasi username berupa “Wayang” dan password “baratayudayyy” dengan yyy merupakan kode kelompok. Letakkan DocumentRoot pada /var/www/rjp.baratayuda.abimanyu.yyy.
 
 #### Answer:  
+Untuk menambahkan autentikasi ketika mengakses www.rjp.baratayuda.abimanyu.E28.com maka pada `rjp.baratayuda.abimanyu-apache-block` ditambahkan lines berikut  
+```
+<Directory /var/www/rjp.baratayuda.abimanyu.E28>
+	AuthType Basic
+	AuthName "Restricted Content"
+	AuthUserFile /etc/apache2/.htpasswd
+	Require valid-user
+</Directory>
+```
+- AuthType: pilihan tipe autentikasi
+- AuthName: message yang ditampilkan pada halaman autentikasi
+- AuthUserFile: file tempat username dan password
+- Require: persyaratan yang harus dipenuhi untuk bisa mengakses directory
+
+Kemudian untuk membuat username dan password jalankan command berikut  
+```shell
+htpasswd -c -b /etc/apache2/.htpasswd Wayang baratayudaE28
+```
+Command ini akan membuat file `.htpassword` yang berisi Username: Wayang dengan Password: baratayudaE28, yang telah di hash.  
+
 #### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses www.rjp.baratayuda.abimanyu.E28.com melalui port 14000 atau 14400.  
+```shell
+lynx www.rjp.baratayuda.abimanyu.E28.com:14000
+```
+Menampilkan halaman autentikasi.  
+
+![](/images/username.png)
+
+![](/images/password.png)
+
+Autentikasi berhasil.  
+
+![](/images/rjp.png)
 
 ### No 19
 > Buatlah agar setiap kali mengakses IP dari Abimanyu akan secara otomatis dialihkan ke www.abimanyu.yyy.com (alias).
 
 #### Answer:  
+Untuk mengalihkan akses melalui IP kita bisa melakukannya dengan mengedit default block dari apache, default block dari apache diatur dalam `default-apache-block` sebagai berikut  
+```
+<VirtualHost *:80>
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/html
+
+      Redirect / http://www.abimanyu.E28.com/
+
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+Ketika user mengakses node abimanyu melalui IP maka akan secara otomatis menggunakan default block dari apache, oleh karena itu kita meredirect akses menuju www.abimanyu.E28.com.  
+
+Copy `default-apache-block` ke `/etc/apache2/sites-available`.  
+```shell
+cp /root/default-apache-block /etc/apache2/sites-available/000-default.conf
+```
+
+Aktifkan website.  
+```shell
+a2ensite 000-default
+```
+
 #### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses IP Abimanyu 192.220.1.4  
+```shell
+lynx 192.220.1.4
+```
+Menampilkan `index.html` yang ada di `/var/www/abimanyu.E28`  
+
+![](/images/lynx-abimanyu.png)
 
 ### No 20
 > Karena website www.parikesit.abimanyu.yyy.com semakin banyak pengunjung dan banyak gambar gambar random, maka ubahlah request gambar yang memiliki substring “abimanyu” akan diarahkan menuju abimanyu.png.
 
 #### Answer:  
+Enable module rewrite menggunakan command  
+```shell
+a2enmod rewrite
+```
+
+Module rewrite ini diatur dalam `parikesit-htaccess`
+```
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/public/images/(.*)(abimanyu)(.*\.(png|jpg))
+RewriteCond %{REQUEST_URI} !/public/images/abimanyu.png
+RewriteRule abimanyu http://parikesit.abimanyu.E28.com/public/images/abimanyu.png$1 [L,R=301]
+```
+
+Buat file `.htaccess` pada directory /var/www/parikesit.abimanyu.E28 kemudian copy `parikesit-htaccess` ke dalamnya  
+```
+touch /var/www/parikesit.abimanyu.E28/.htaccess
+cp /root/parikesit-htaccess /var/www/parikesit.abimanyu.E28/.htaccess
+```
+
+Konfigurasi `.htaccess` pada `parikesit.abimanyu-apache-block` diatur menggunakan lines berikut    
+```
+<Directory /var/www/parikesit.abimanyu.E28>
+	Options +FollowSymLinks -Multiviews
+	AllowOverride All
+</Directory>
+```
+
 #### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses file pada parikesit.abimanyu.a09.com/public/images yang mengandung substring abimanyu  
+```
+lynx parikesit.abimanyu.a09.com/public/images/not-abimanyu.png
+lynx parikesit.abimanyu.a09.com/public/images/abimanyu-student.jpg
+lynx parikesit.abimanyu.a09.com/public/images/abimanyu.png
+lynx parikesit.abimanyu.a09.com/public/images/notabimanyujustmuseum.177013
+```
+Menampilkan halaman download abimanyu.png karena telah dialihkan menuju parikesit.abimanyu.a09.com/public/images/abimanyu.png.  
 
-
-
-
+![](/images/abimanyu-img.png)
 
 
