@@ -955,7 +955,7 @@ Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/
 ```shell
 lynx www.parikesit.abimanyu.E28.com/secret
 ```
-Menampilkan laman forbidden 403.  
+Menampilkan halaman forbidden 403.  
 
 ![](/images/secret.png)
 
