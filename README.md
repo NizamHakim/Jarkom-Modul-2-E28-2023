@@ -16,7 +16,27 @@
   - [PrabukusumaWebServer](#PrabukusumaWebServer)
   - [WisanggeniWebServer](#WisanggeniWebServer)
   - [ArjunaLoadBalancer](#ArjunaLoadBalancer)
-
+- [Soal Praktikum](#Soal-Praktikum)
+  - [No 1]()
+  - [No 2]()
+  - [No 3]()
+  - [No 4]()
+  - [No 5]()
+  - [No 6]()
+  - [No 7]()
+  - [No 8]()
+  - [No 9]()
+  - [No 10]()
+  - [No 11]()
+  - [No 12]()
+  - [No 13]()
+  - [No 14]()
+  - [No 15]()
+  - [No 16]()
+  - [No 17]()
+  - [No 18]()
+  - [No 19]()
+  - [No 20]() 
 ## Topologi
 ![](/images/topologi.png)
 
@@ -110,7 +130,7 @@
   ```
 
 ## Files
-File-file ini harus ada pada /root masing-masing node
+File-file ini harus ada pada `/root` masing-masing node. File-file yang ada di `/root` tidak akan terhapus meskipun project ditutup.
 ### Router
 - **iptables.sh**
   ```shell
@@ -734,6 +754,122 @@ File-file ini harus ada pada /root masing-masing node
   service nginx restart
   echo "LoadBalancer Ready"
   ```
+### .bashrc
+Masukkan shell script berikut ke `/root/.bashrc` agar script tersebut otomatis dieksekusi ketika node di start. Gunakan command `nano /root/.bashrc` dan tambahkan `/root/script-name.sh` ke dalam `.bashrc`
+| Node | Script |
+| --- | --- |
+| **Router** | `/root/iptables.sh` |
+| **NakulaClient** | `/root/initClient.sh` |
+| **SadewaClient** | `/root/initClient.sh` |
+| **YudhistiraDNSMaster** | `/root/initDNSMaster.sh` |
+| **WerkudaraDNSSlave** | `/root/initDNSSlave.sh` |
+| **AbimanyuWebServer** | `/root/initWebServer.sh` |
+| **PrabukusumaWebServer** | `/root/initWebServer.sh` |
+| **WisanggeniWebServer** | `/root/initWebServer.sh` |
+| **ArjunaLoadBalancer** | `/root/initLoadBalancer.sh` |
+
+## Soal Praktikum
+### No 1
+> Yudhistira akan digunakan sebagai DNS Master, Werkudara sebagai DNS Slave, Arjuna merupakan Load Balancer yang terdiri dari beberapa Web Server yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Buatlah topologi dengan pembagian sebagai berikut. Folder topologi dapat diakses pada drive berikut.
+
+Answer:  
+(none)  
+
+### No 2
+> Buatlah website utama pada node arjuna dengan akses ke arjuna.yyy.com dengan alias www.arjuna.yyy.com dengan yyy merupakan kode kelompok.
+
+Answer:  
+
+### No 3
+> Dengan cara yang sama seperti soal nomor 2, buatlah website utama dengan akses ke abimanyu.yyy.com dan alias www.abimanyu.yyy.com.
+
+Answer:  
+
+### No 4
+> Kemudian, karena terdapat beberapa web yang harus di-deploy, buatlah subdomain parikesit.abimanyu.yyy.com yang diatur DNS-nya di Yudhistira dan mengarah ke Abimanyu.
+
+Answer:  
+
+### No 5
+> Buat juga reverse domain untuk domain utama. (Abimanyu saja yang direverse).
+
+Answer:  
+
+### No 6
+> Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
+
+Answer:  
+
+### No 7
+> Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
+
+Answer:  
+
+### No 8
+> Untuk informasi yang lebih spesifik mengenai Ranjapan Baratayuda, buatlah subdomain melalui Werkudara dengan akses rjp.baratayuda.abimanyu.yyy.com dengan alias www.rjp.baratayuda.abimanyu.yyy.com yang mengarah ke Abimanyu.
+
+Answer:  
+
+### No 9
+> Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
+
+Answer:  
+
+### No 10
+> Kemudian gunakan algoritma Round Robin untuk Load Balancer pada Arjuna. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh: (Prabakusuma:8001, Abimanyu:8002, Wisanggeni:8003)
+
+Answer:  
+
+### No 11
+> Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server www.abimanyu.yyy.com. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy.
+
+Answer:  
+
+### No 12
+> Setelah itu ubahlah agar url www.abimanyu.yyy.com/index.php/home menjadi www.abimanyu.yyy.com/home.
+
+Answer:  
+
+### No 13
+> Selain itu, pada subdomain www.parikesit.abimanyu.yyy.com, DocumentRoot disimpan pada /var/www/parikesit.abimanyu.yyy.
+
+Answer:  
+
+### No 14
+> Pada subdomain tersebut folder /public hanya dapat melakukan directory listing sedangkan pada folder /secret tidak dapat diakses (403 Forbidden).
+
+Answer:  
+
+### No 15
+> Buatlah kustomisasi halaman error pada folder /error untuk mengganti error kode pada Apache. Error kode yang perlu diganti adalah 404 Not Found dan 403 Forbidden.
+
+Answer:  
+
+### No 16
+> Buatlah suatu konfigurasi virtual host agar file asset www.parikesit.abimanyu.yyy.com/public/js menjadi www.parikesit.abimanyu.yyy.com/js.
+
+Answer:  
+
+### No 17
+> Agar aman, buatlah konfigurasi agar www.rjp.baratayuda.abimanyu.yyy.com hanya dapat diakses melalui port 14000 dan 14400.
+
+Answer:  
+
+### No 18
+> Untuk mengaksesnya buatlah autentikasi username berupa “Wayang” dan password “baratayudayyy” dengan yyy merupakan kode kelompok. Letakkan DocumentRoot pada /var/www/rjp.baratayuda.abimanyu.yyy.
+
+Answer:  
+
+### No 19
+> Buatlah agar setiap kali mengakses IP dari Abimanyu akan secara otomatis dialihkan ke www.abimanyu.yyy.com (alias).
+
+Answer:  
+
+### No 20
+> Karena website www.parikesit.abimanyu.yyy.com semakin banyak pengunjung dan banyak gambar gambar random, maka ubahlah request gambar yang memiliki substring “abimanyu” akan diarahkan menuju abimanyu.png.
+
+Answer:  
+
 
 
 
