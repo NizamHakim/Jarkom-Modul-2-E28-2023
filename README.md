@@ -9,7 +9,7 @@
 - [Network Configuration](#Config)
 - [Files](#Files)
   - [Router](#Router)
-  - [NakulaClient dan SadewaClient](#NakulaClient dan SadewaClient)
+  - [NakulaClient dan SadewaClient](#NakulaClient-dan-SadewaClient)
   - [YudhistiraDNSMaster](#YudhistiraDNSMaster)
   - [WerkudaraDNSSlave](#WerkudaraDNSSlave)
   - [AbimanyuWebServer](#AbimanyuWebServer)
