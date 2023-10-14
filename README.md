@@ -772,103 +772,334 @@ Masukkan shell script berikut ke `/root/.bashrc` agar script tersebut otomatis d
 ### No 1
 > Yudhistira akan digunakan sebagai DNS Master, Werkudara sebagai DNS Slave, Arjuna merupakan Load Balancer yang terdiri dari beberapa Web Server yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Buatlah topologi dengan pembagian sebagai berikut. Folder topologi dapat diakses pada drive berikut.
 
-Answer:  
+#### Answer:  
+(none)  
+#### Testing:  
 (none)  
 
 ### No 2
 > Buatlah website utama pada node arjuna dengan akses ke arjuna.yyy.com dengan alias www.arjuna.yyy.com dengan yyy merupakan kode kelompok.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 3
 > Dengan cara yang sama seperti soal nomor 2, buatlah website utama dengan akses ke abimanyu.yyy.com dan alias www.abimanyu.yyy.com.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 4
 > Kemudian, karena terdapat beberapa web yang harus di-deploy, buatlah subdomain parikesit.abimanyu.yyy.com yang diatur DNS-nya di Yudhistira dan mengarah ke Abimanyu.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 5
 > Buat juga reverse domain untuk domain utama. (Abimanyu saja yang direverse).
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 6
 > Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 7
 > Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 8
 > Untuk informasi yang lebih spesifik mengenai Ranjapan Baratayuda, buatlah subdomain melalui Werkudara dengan akses rjp.baratayuda.abimanyu.yyy.com dengan alias www.rjp.baratayuda.abimanyu.yyy.com yang mengarah ke Abimanyu.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 9
 > Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 10
 > Kemudian gunakan algoritma Round Robin untuk Load Balancer pada Arjuna. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh: (Prabakusuma:8001, Abimanyu:8002, Wisanggeni:8003)
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 11
 > Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server www.abimanyu.yyy.com. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy.
 
-Answer:  
+#### Answer:  
+Konfigurasi apache www.abimanyu.E28.com diatur pada file `abimanyu-apache-block` yaitu pada lines berikut   
+```
+<VirtualHost *:80>
+      ServerName abimanyu.E28.com
+      ServerAlias www.abimanyu.E28.com
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/abimanyu.E28
+
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+- VirtualHost: port yang digunakan untuk mengakses abimanyu.E28.com  
+- ServerName: nama yang digunakan untuk mengakses abimanyu.E28.com  
+- ServerAlias: alias dari abimanyu.E28.com  
+- DocumentRoot: tempat file-file milik abimanyu.E28.com  
+
+Copy `abimanyu-apache-block` ke `/etc/apache2/sites-available`.  
+```shell
+cp /root/abimanyu-apache-block /etc/apache2/sites-available/abimanyu.E28.com.conf
+```
+
+File-file dari abimanyu.E28.com diatur pada directory `/var/www/abimanyu.E28`. Buat directory `/var/www/abimanyu.E28` kemudian copy files dari `/root/abimanyu.yyy.com` dan paste ke dalamnya.  
+```shell
+mkdir /var/www/abimanyu.E28
+cp /root/abimanyu.yyy.com/* /var/www/abimanyu.E28
+```
+
+Aktifkan website.  
+```shell
+a2ensite abimanyu.E28.com
+```
+
+#### Testing:
+Gunakan `lynx` pada NakulaClient untuk mengakses www.abimanyu.E28.com.  
+```shell
+lynx www.abimanyu.E28.com
+```
+Menampilkan `index.html` yang ada di `/var/www/abimanyu.E28`.  
+![](/images/lynx-abimanyu.png)
 
 ### No 12
 > Setelah itu ubahlah agar url www.abimanyu.yyy.com/index.php/home menjadi www.abimanyu.yyy.com/home.
 
-Answer:  
+#### Answer:  
+Alias dari directory pada www.abimanyu.E28.com diatur dalam `abimanyu-apache-block` yaitu pada lines berikut  
+```
+<Directory /var/www/abimanyu.E28/index.php/home>
+	Options +Indexes
+</Directory>
+
+Alias "/home" "/var/www/abimanyu.E28/index.php/home"
+```
+Ketika user mengakses www.abimanyu.yyy.com/home maka akan diteruskan menuju www.abimanyu.yyy.com/index.php/home  
+
+#### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses www.abimanyu.E28.com/home.  
+```shell
+lynx www.abimanyu.E28.com/home
+```
+Menampilkan `index.html` yang ada di `/var/www/abimanyu.E28`  
+![](/images/lynx-abimanyu.png)
 
 ### No 13
 > Selain itu, pada subdomain www.parikesit.abimanyu.yyy.com, DocumentRoot disimpan pada /var/www/parikesit.abimanyu.yyy.
 
-Answer:  
+#### Answer:  
+Konfigurasi apache www.parikesit.abimanyu.E28.com diatur pada file `parikesit.abimanyu-apache-block` yaitu pada lines berikut
+```
+<VirtualHost *:80>
+        ServerName parikesit.abimanyu.E28.com
+        ServerAlias www.parikesit.abimanyu.E28.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/parikesit.abimanyu.E28
+  
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+- VirtualHost: port yang digunakan untuk mengakses parikesit.abimanyu.E28.com  
+- ServerName: nama yang digunakan untuk mengakses parikesit.abimanyu.E28.com  
+- ServerAlias: alias dari parikesit.abimanyu.E28.com  
+- DocumentRoot: tempat file-file milik parikesit.abimanyu.E28.com
+
+Copy `parikesit.abimanyu-apache-block` ke `/etc/apache2/sites-available`.  
+```shell
+cp /root/parikesit.abimanyu-apache-block /etc/apache2/sites-available/parikesit.abimanyu.E28.com.conf
+```
+
+File-file dari parikesit.abimanyu.E28.com diatur pada directory `/var/www/parikesit.abimanyu.E28`. Buat directory `/var/www/parikesit.abimanyu.E28` kemudian copy files dari `/root/parikesit.abimanyu.yyy.com` dan paste ke dalamnya.  
+```shell
+mkdir /var/www/parikesit.abimanyu.E28
+cp -r /root/parikesit.abimanyu.yyy.com/* /var/www/parikesit.abimanyu.E28
+```
+
+Tambahkan directory secret dan isi dengan sebarang file html untuk digunakan di nomor selanjutnya.  
+```shell
+mkdir /var/www/parikesit.abimanyu.E28/secret
+touch /var/www/parikesit.abimanyu.E28/secret/rahasia.html
+```
+
+Aktifkan website.    
+```shell
+a2ensite parikesit.abimanyu.E28.com
+```
+
+#### Testing:    
+Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com.  
+```shell
+lynx www.parikesit.abimanyu.E28.com
+```
+Menampilkan folder-folder yang yang ada di `/var/www/parikesit.abimanyu.E28`  
+![](/images/lynx-parikesit.abimanyu.png)
 
 ### No 14
 > Pada subdomain tersebut folder /public hanya dapat melakukan directory listing sedangkan pada folder /secret tidak dapat diakses (403 Forbidden).
 
-Answer:  
+#### Answer:  
+Untuk mengaktifkan directory listing pada www.parikesit.abimanyu.E28.com/public maka pada `parikesit.abimanyu-apache-block` ditambahkan lines berikut  
+```
+<Directory /var/www/parikesit.abimanyu.E28/public>
+	Options +Indexes
+</Directory>
+```
+Sedangkan untuk menonaktifkan directory listing pada www.parikesit.abimanyu.E28.com/secret maka pada `parikesit.abimanyu-apache-block` ditambahkan lines berikut  
+```
+<Directory /var/www/parikesit.abimanyu.E28/secret>
+	Options -Indexes
+</Directory>
+```
+
+#### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/public.  
+```shell
+lynx www.parikesit.abimanyu.E28.com/public
+```
+Menampilkan folder-folder yang yang ada di `/var/www/parikesit.abimanyu.E28/public`  
+![](/images/public.png)
+
+Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/secret.  
+```shell
+lynx www.parikesit.abimanyu.E28.com/secret
+```
+Menampilkan laman forbidden 403  
+![](/images/secret.png)
 
 ### No 15
 > Buatlah kustomisasi halaman error pada folder /error untuk mengganti error kode pada Apache. Error kode yang perlu diganti adalah 404 Not Found dan 403 Forbidden.
 
-Answer:  
+#### Answer:  
+Untuk kustomisasi halaman error 403 dan 404 pada www.parikesit.abimanyu.E28.com maka pada `parikesit.abimanyu-apache-block` ditambahkan lines berikut  
+```
+ErrorDocument 403 /error/403.html
+ErrorDocument 404 /error/404.html
+```
+Dimana 403.html dan 404.html tersebut disimpan pada directory /var/www/parikesit.abimanyu.E28/error.  
+
+#### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/secret.  
+```shell
+lynx www.parikesit.abimanyu.E28.com/secret
+```
+Menampilkan halaman forbidden 403 yang telah dikustomisasi.  
+![](/images/secret.png)
+
+Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/asdf.  
+```shell
+lynx www.parikesit.abimanyu.E28.com/asdf
+```
+Menampilkan halaman not found 404 yang telah dikustomisasi.  
+![](/images/asdf.png)
 
 ### No 16
 > Buatlah suatu konfigurasi virtual host agar file asset www.parikesit.abimanyu.yyy.com/public/js menjadi www.parikesit.abimanyu.yyy.com/js.
 
-Answer:  
+#### Answer:  
+Alias dari directory pada www.parikesit.abimanyu.E28.com diatur dalam `parikesit.abimanyu-apache-block` yaitu pada lines berikut  
+```
+<Directory /var/www/parikesit.abimanyu.E28/public/js>
+	Options +Indexes
+</Directory>
+
+Alias "/js" "/var/www/parikesit.abimanyu.E28/public/js"
+```
+Ketika user mengakses www.parikesit.abimanyu.E28.com/js maka akan diteruskan menuju www.parikesit.abimanyu.yyy.com/public/js.  
+
+#### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses www.parikesit.abimanyu.E28.com/js.  
+```shell
+lynx www.parikesit.abimanyu.E28.com/js
+```
+Menampilkan isi dari /var/www/parikesit.abimanyu.E28/public/js.  
+![](/images/js.png)
 
 ### No 17
 > Agar aman, buatlah konfigurasi agar www.rjp.baratayuda.abimanyu.yyy.com hanya dapat diakses melalui port 14000 dan 14400.
 
-Answer:  
+#### Answer:  
+Konfigurasi apache www.rjp.baratayuda.abimanyu.E28.com diatur dalam `rjp.baratayuda.abimanyu-apache-block` yaitu pada lines berikut  
+```
+<VirtualHost *:14000 *:14400>
+      ServerName rjp.baratayuda.abimanyu.E28.com
+      ServerAlias www.rjp.baratayuda.abimanyu.E28.com
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/rjp.baratayuda.abimanyu.E28
+
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+- VirtualHost: port yang digunakan untuk mengakses rjp.baratayuda.abimanyu.E28.com 
+- ServerName: nama yang digunakan untuk mengakses rjp.baratayuda.abimanyu.E28.com  
+- ServerAlias: alias dari rjp.baratayuda.abimanyu.E28.com  
+- DocumentRoot: tempat file-file milik rjp.baratayuda.abimanyu.E28.com
+
+Bisa dilihat bahwa rjp.baratayuda.abimanyu.E28.com bisa diakses melalui 2 port yaitu 14000 dan 14400.  
+
+Kemudian tambahkan 14000 dan 14400 ke `ports-apache.conf` sehingga menjadi seperti berikut  
+```
+Listen 80
+Listen 14000
+Listen 14400
+
+<IfModule ssl_module>
+      Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+      Listen 443
+</IfModule>
+```
+
+#### Testing:  
+Gunakan `lynx` pada NakulaClient untuk mengakses www.rjp.baratayuda.abimanyu.E28.com melalui port 14000 atau 14400.  
+```
+lynx www.rjp.baratayuda.abimanyu.E28.com:14000
+lynx www.rjp.baratayuda.abimanyu.E28.com:14400
+```
+Menampilkan isi dari /var/www/rjp.baratayuda.abimanyu.E28.  
+![](/images/rjp.png)
+
+Gunakan `lynx` pada NakulaClient untuk mengakses www.rjp.baratayuda.abimanyu.E28.com melalui port selain 14000 dan 14400.  
+```
+lynx www.rjp.baratayuda.abimanyu.E28.com:8080
+```
+Menampilkan halaman error karena port tidak sesuai.  
+![](/images/rjp-error.png)
 
 ### No 18
 > Untuk mengaksesnya buatlah autentikasi username berupa “Wayang” dan password “baratayudayyy” dengan yyy merupakan kode kelompok. Letakkan DocumentRoot pada /var/www/rjp.baratayuda.abimanyu.yyy.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 19
 > Buatlah agar setiap kali mengakses IP dari Abimanyu akan secara otomatis dialihkan ke www.abimanyu.yyy.com (alias).
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 ### No 20
 > Karena website www.parikesit.abimanyu.yyy.com semakin banyak pengunjung dan banyak gambar gambar random, maka ubahlah request gambar yang memiliki substring “abimanyu” akan diarahkan menuju abimanyu.png.
 
-Answer:  
+#### Answer:  
+#### Testing:  
 
 
 
