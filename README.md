@@ -814,7 +814,9 @@ echo nameserver 192.220.2.2 > /etc/resolv.conf
 
 #### Testing:  
 Untuk memeriksa, dapat dilakukan dengan `ping arjuna.E28.com` dan `ping www.arjuna.E28.com -c 5` pada NakulaClient dan SadewaClient
+
 ![](/images/ping-arjuna.png)
+
 ![](/images/ping-www.arjuna.png)
 
 ### No 3
@@ -876,8 +878,10 @@ Untuk setting nameserver pada NakulaClient dan SadewaClient, arahkan nameserver 
 echo nameserver 192.220.2.2 > /etc/resolv.conf
 ```
 #### Testing:  
-Untuk memeriksa, dapat dilakukan dengan `ping abimanyu.E28.com` atau `ping www.abimanyu.E28.com` pada NakulaClient dan SadewaClient
+Untuk memeriksa, dapat dilakukan dengan `ping abimanyu.E28.com -c 5` atau `ping www.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
+
 ![](/images/ping-abimanyu.png)
+
 ![](/images/ping-www.abimanyu.png)
 ### No 4
 > Kemudian, karena terdapat beberapa web yang harus di-deploy, buatlah subdomain parikesit.abimanyu.yyy.com yang diatur DNS-nya di Yudhistira dan mengarah ke Abimanyu.
@@ -913,8 +917,10 @@ Restart service bind
 service bind9 restart
 ```
 
-Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.parikesit.abimanyu.E28.com` atau `ping www.parikesit.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
+Untuk memeriksa, dapat dilakukan dengan `ping parikesit.abimanyu.E28.com -c 5` atau `ping www.parikesit.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
+
 ![](/images/ping-parikesit.png)
+
 ![](/images/ping-www.parikesit.png)
 
 ### No 5
@@ -971,6 +977,7 @@ apt-get install dnsutils
 host -t PTR 192.220.1.4
 ```
 ![](/images/ptr.png)
+
 ### No 6
 > Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
 
@@ -1025,6 +1032,7 @@ Pada Yudhistira, silakan matikan service bind9
 service bind9 stop
 ```
 ![](/images/stop-DNSMaster.png)
+
 Pada Nakulaclient dan SadewaClient pastikan nameserver mengarah ke IP Yudhistira dan Werkudara
 ```
 # DNS Master
@@ -1033,7 +1041,9 @@ echo nameserver 192.220.2.2 > /etc/resolv.conf
 echo nameserver 192.220.2.3 >> /etc/resolv.conf
 ```
 Ping ke `abimanyu.E28.com` dengan `ping abimanyu.E28.com -c 5`
+
 ![](/images/ping-stop.png)
+
 ### No 7
 > Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
 
@@ -1103,8 +1113,11 @@ Periksa dengan menjalankan command berikut pada client:
 ping baratayuda.abimanyu.E28.com
 ping www.baratayuda.abimanyu.E28.com
 ```
+
 ![](/images/ping-baratayuda.png)
+
 ![](/images/ping-www.baratayuda.png)
+
 ### No 8
 > Untuk informasi yang lebih spesifik mengenai Ranjapan Baratayuda, buatlah subdomain melalui Werkudara dengan akses rjp.baratayuda.abimanyu.yyy.com dengan alias www.rjp.baratayuda.abimanyu.yyy.com yang mengarah ke Abimanyu.
 
@@ -1141,8 +1154,11 @@ Periksa dengan menjalankan command berikut pada client:
 ping rjp.baratayuda.abimanyu.E28.com
 ping www.rjp.baratayuda.abimanyu.E28.com
 ```
+
 ![](/images/ping-rjp.baratayuda.png)
+
 ![](/images/ping-www.rjp.baratayuda.png)
+
 ### No 9
 > Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
 
@@ -1336,12 +1352,15 @@ lynx arjuna.E28.com
 ```
 
 _Abimanyu_
+
 ![](/images/abimanyu-worker.png)
 
 _Prabukusuma_
+
 ![](/images/prabukusuma-worker.png)
 
 _Wisanggeni_
+
 ![](/images/wisanggeni-worker.png)
 
 ### No 11
