@@ -746,40 +746,288 @@ Masukkan shell script berikut ke `/root/.bashrc` agar script tersebut otomatis d
 > Yudhistira akan digunakan sebagai DNS Master, Werkudara sebagai DNS Slave, Arjuna merupakan Load Balancer yang terdiri dari beberapa Web Server yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Buatlah topologi dengan pembagian sebagai berikut. Folder topologi dapat diakses pada drive berikut.
 
 #### Answer:  
-(none)  
+(none) 
 #### Testing:  
 (none)  
 
 ### No 2
 > Buatlah website utama pada node arjuna dengan akses ke arjuna.yyy.com dengan alias www.arjuna.yyy.com dengan yyy merupakan kode kelompok.
 
-#### Answer:  
-#### Testing:  
+#### Answer:
+Buka _Yudhistira_ untuk update package list dan install aplikasi bind9 dengan command berikut:
+```
+ apt-get update
+ apt-get install bind9 -y
+```
 
+Lakukan perintah berikut pada _Yudhistira_:
+```
+cp /root/named.conf.local /etc/bind/named.conf.local
+```
+
+Isikan konfigurasai domain arjuna.E28.com (yyy: kelompok E28) dengan sintaks:
+```
+zone "arjuna.E28.com" {
+      type master;
+      file "/etc/bind/jarkom/arjuna.E28.com";
+};
+```
+
+Buat folder jarkom dalam `/etc/bind`:
+```
+mkdir /etc/bind/jarkom
+```
+
+Copykan file db.local pada path /etc/bind ke dalam folder jarkom yang baru saja dibuat dan ubah namanya menjadi arjuna.E28.com
+```
+cp /root/arjuna.E28.com /etc/bind/jarkom/arjuna.E28.com
+```
+
+Kemudian buka arjuna.E28.com dengan `nano /etc/bind/jarkom/arjuna.E28.com` dan edit isinya serta tambahkan alias menjadi `www.arjuna.E28.com` seperti di bawah ini: 
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     arjuna.E28.com. root.arjuna.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+@       IN      NS      arjuna.E28.com.
+@       IN      A       192.220.2.4     ; IP Arjuna
+www     IN      CNAME   arjuna.E28.com.
+@       IN      AAAA    ::1
+```
+
+Restart bind9 dengan perintah:
+```
+service bind9 restart
+```
+
+Untuk setting nameserver pada NakulaClient dan SadewaClient, arahkan nameserver menuju IP Yudhistira dengan mengedit file `resolv.conf` 
+```
+echo nameserver 192.220.2.2 > /etc/resolv.conf
+```
+
+#### Testing:  
+Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.arjuna.E28.com` atau `ping www.arjuna.E28.com -c 5` pada NakulaClient dan SadewaClient
+(gambar)
 ### No 3
 > Dengan cara yang sama seperti soal nomor 2, buatlah website utama dengan akses ke abimanyu.yyy.com dan alias www.abimanyu.yyy.com.
 
 #### Answer:  
-#### Testing:  
+Cara pengerjaannya sama dengan no. 2, yaitu:
+Lakukan perintah berikut pada _Yudhistira_:
+```
+nano /etc/bind/named.conf.local/
+```
 
+Isikan konfigurasai domain abimanyu.E28.com (yyy: kelompok E28) dengan sintaks:
+```
+zone "abimanyu.E28.com" {
+      type master;
+      file "/etc/bind/jarkom/abimanyu.E28.com";
+};
+```
+
+Buat folder jarkom dalam `/etc/bind`:
+```
+mkdir /etc/bind/jarkom
+```
+
+Copykan file db.local pada path /etc/bind ke dalam folder jarkom yang baru saja dibuat dan ubah namanya menjadi abimanyu.E28.com
+```
+cp /root/abimanyu.E28.com /etc/bind/jarkom/abimanyu.E28.com
+```
+
+Kemudian buka arjuna.E28.com dengan `nano /etc/bind/jarkom/abimanyu.E28.com` dan edit isinya serta tambahkan alias menjadi `www.abimanyu.E28.com` seperti di bawah ini: 
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     abimanyu.E28.com. root.abimanyu.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+@               IN      NS      abimanyu.E28.com.
+@               IN      A       192.220.1.4     ; IP Abimanyu
+www             IN      CNAME   abimanyu.E28.com.
+parikesit       IN      A       192.220.1.4     ; IP Abimanyu
+www.parikesit   IN      CNAME   parikesit.abimanyu.E28.com.
+@               IN      AAAA    ::1
+```
+
+Restart bind9 dengan perintah:
+```
+service bind9 restart
+```
+
+Untuk setting nameserver pada NakulaClient dan SadewaClient, arahkan nameserver menuju IP Yudhistira dengan mengedit file `resolv.conf` 
+```
+echo nameserver 192.220.2.2 > /etc/resolv.conf
+```
+#### Testing:  
+Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.abimanyu.E28.com` atau `ping www.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
+(gambar)
 ### No 4
 > Kemudian, karena terdapat beberapa web yang harus di-deploy, buatlah subdomain parikesit.abimanyu.yyy.com yang diatur DNS-nya di Yudhistira dan mengarah ke Abimanyu.
 
 #### Answer:  
+Pada Yudhistira, edit file `/etc/bind/jarkom/abimanyu.E28.com` lalu tambahkan subdomain parikesit.abimanyu.E28.com yang mengarah ke IP abimanyu
+```
+nano `/etc/bind/jarkom/abimanyu.E28.com`
+```
+Tambahkan konfigurasi seperti di bawah ini untuk abimanyu.E28.com
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     abimanyu.E28.com. root.abimanyu.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+@               IN      NS      abimanyu.E28.com.
+@               IN      A       192.220.1.4     ; IP Abimanyu
+www             IN      CNAME   abimanyu.E28.com.
+parikesit       IN      A       192.220.1.4     ; IP Abimanyu
+www.parikesit   IN      CNAME   parikesit.abimanyu.E28.com.
+@               IN      AAAA    ::1
+```
 #### Testing:  
+Restart service bind
+```
+service bind9 restart
+```
+
+Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.parikesit.abimanyu.E28.com` atau `ping www.parikesit.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
+(gambar)
 
 ### No 5
 > Buat juga reverse domain untuk domain utama. (Abimanyu saja yang direverse).
 
 #### Answer:  
-#### Testing:  
+Edit `/etc/bind/named.conf.local` pada Yudhistira
+```
+nano /etc/bind/named.conf.local
+```
 
+Tambahkan konfigurasi dalam file tersebut dengan reverse 3 byte awal dari IP Abimanyu
+```
+zone "1.220.192.in-addr.arpa" {
+	type master;
+  	file "/etc/bind/jarkom/1.220.192.in-addr.arpa";
+};
+```
+Copykan file ptr ke dalam folder jarkom dan ubah namanya menjadi `1.220.192.in-addr.arpa`
+```
+cp /root/abimanyu.E28.ptr /etc/bind/jarkom/1.220.192.in-addr.arpa
+```
+Edit file sehingga menjadi seperti di bawah ini:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     abimanyu.E28.com. root.abimanyu.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+1.220.192.in-addr.arpa. IN      NS      abimanyu.E28.com.
+4                       IN      PTR     abimanyu.E28.com.
+```
+
+#### Testing:  
+Restart service bind
+```
+service bind9 restart
+```
+
+Untuk memeriksa, dapat dilakukan dengan command berikut pada client
+```
+// Install package dnsutils
+// Pastikan nameserver di /etc/resolv.conf telah dikembalikan sama dengan nameserver dari Router
+apt-get update
+apt-get install dnsutils
+
+//Kembalikan nameserver agar tersambung dengan EniesLobby
+host -t PTR "IP Yudhistira"
+```
+(gambar)
 ### No 6
 > Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
 
 #### Answer:  
-#### Testing:  
+Lakukan konfigurasi pada server Yudhistira dalam file `/etc/bind/named.conf.local` hingga menjadi seperti di bawah ini:
+```
+zone "arjuna.E28.com" {
+      type master;
+      file "/etc/bind/jarkom/arjuna.E28.com";
+};
 
+zone "abimanyu.E28.com" {
+      type master;
+      notify yes;
+      also-notify { 192.220.2.3; };
+      allow-transfer { 192.220.2.3; };
+      file "/etc/bind/jarkom/abimanyu.E28.com";
+};
+
+zone "1.220.192.in-addr.arpa" {
+	type master;
+  	file "/etc/bind/jarkom/1.220.192.in-addr.arpa";
+};
+```
+
+Restart service bind
+```
+service bind9 restart
+```
+
+Lakukan konfigurasi pada Werkudara dengan update package list dan install aplikasi bind9 dengan command berikut:
+```
+ apt-get update
+ apt-get install bind9 -y
+```
+Kemudian, buka file `/etc/bind/named.conf.local` pada werkudara dan tambahkan perintah seperti di bawah ini:
+```
+zone "abimanyu.E28.com" {
+  type slave;
+  masters { 192.220.2.2; }; // Yudhistira
+  file "/var/lib/bind/abimanyu.E28.com";
+};
+```
+Restart service bind
+```
+service bind9 restart
+```
+
+#### Testing:  
+Pada Yudhistira, silakan matikan service bind9
+```
+service bind9 stop
+```
+
+Pada Nakulaclient dan SadewaClient pastikan nameserver mengarah ke IP Yudhistira dan Werkudara
+```
+# DNS Master
+echo nameserver 192.220.2.2 > /etc/resolv.conf
+# DNS Slave
+echo nameserver 192.220.2.3 >> /etc/resolv.conf
+```
 ### No 7
 > Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
 
