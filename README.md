@@ -1032,7 +1032,65 @@ echo nameserver 192.220.2.3 >> /etc/resolv.conf
 > Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
 
 #### Answer:  
+Edit file `abimanyu.E28.com ` pada Yudhistira seperti di bawah ini:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     abimanyu.E28.com. root.abimanyu.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+@               IN      NS      abimanyu.E28.com.
+@               IN      A       192.220.1.4     ; IP Abimanyu
+www             IN      CNAME   abimanyu.E28.com.
+parikesit       IN      A       192.220.1.4     ; IP Abimanyu
+www.parikesit   IN      CNAME   parikesit.abimanyu.E28.com.
+nsl             IN      A       192.220.2.3     ; IP Werkudara
+baratayuda      IN      NS      nsl
+@               IN      AAAA    ::1
+```
+
+Pada Werkudara, lakukan konfigurasi dengan menambahkan perintah berikut pada `named.conf.local`:
+```
+zone "baratayuda.abimanyu.E28.com" {
+  type master;
+  file "/etc/bind/baratayuda/baratayuda.abimanyu.E28.com";
+};
+```
+
+Buat folder `baratayuda` pada _Werkudara_:
+```
+mkdir /etc/bind/baratayuda
+```
+
+Edit file `/etc/bind/baratayuda/baratayuda.abimanyu.E28.com` seperti di bawah ini:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     baratayuda.abimanyu.E28.com. root.baratayuda.abimanyu.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+@       IN      NS      baratayuda.abimanyu.E28.com.
+@       IN      A       192.220.1.4     ; IP Abimanyu
+www     IN      CNAME   baratayuda.abimanyu.E28.com.
+@       IN      AAAA    ::1
+``` 
 #### Testing:  
+Restart service bind9
+```
+service bind9 restart
+```
 
 ### No 8
 > Untuk informasi yang lebih spesifik mengenai Ranjapan Baratayuda, buatlah subdomain melalui Werkudara dengan akses rjp.baratayuda.abimanyu.yyy.com dengan alias www.rjp.baratayuda.abimanyu.yyy.com yang mengarah ke Abimanyu.
