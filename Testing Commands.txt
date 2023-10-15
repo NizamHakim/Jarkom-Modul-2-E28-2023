@@ -1,0 +1,130 @@
+Testing Commands
+
+1. none
+
+2.
+Nakula
+- ping arjuna.E28.com
+- ping www.arjuna.E28.com
+expected output:
+IP Arjuna: 192.220.2.4
+
+3.
+Nakula
+- ping abimanyu.E28.com
+- ping www.abimanyu.E28.com
+expected output:
+IP Abimanyu: 192.220.1.4
+
+4.
+Nakula
+- ping parikesit.abimanyu.E28.com
+- ping www.parikesit.abimanyu.E28.com
+expected output:
+IP Abimanyu: 192.220.1.4
+
+5.
+Nakula
+- host -t PTR 192.220.1.4
+expected output:
+4.1.220.192.in-addr.arpa. points to abimanyu.e28.com.
+
+6.
+Yudhistira
+- service bind9 stop
+Nakula
+- ping abimanyu.E28.com
+expected output:
+IP Abimanyu: 192.220.1.4
+note:
+- service bind9 start (restart yudhistira)
+
+7.
+- ping baratayuda.abimanyu.E28.com
+- ping www.baratayuda.abimanyu.E28.com
+expected output:
+IP Abimanyu: 192.220.1.4
+
+8.
+- ping rjp.baratayuda.abimanyu.E28.com
+- ping www.rjp.baratayuda.abimanyu.E28.com
+expected output:
+IP Abimanyu: 192.220.1.4
+
+9. none
+
+10.
+- lynx arjuna.E28.com x3 (ctrl + c to quit)
+expected output:
+3 nginx worker page switching
+
+11.
+- lynx www.abimanyu.E28.com
+expected output: 
+abimanyu.E28.com apache page
+
+12.
+- lynx www.abimanyu.E28.com/home
+expected output: 
+abimanyu.E28.com apache page
+
+13.
+- lynx www.parikesit.abimanyu.E28.com
+expected output:
+directories inside parikesit which are public, error, and secret directory
+
+14.
+- lynx www.parikesit.abimanyu.E28.com/public
+expected output:
+directories inside public which are css, images, and js directory
+
+- lynx www.parikesit.abimanyu.E28.com/secret
+expected output:
+403 forbidden
+
+15.
+- lynx www.parikesit.abimanyu.E28.com/secret
+expected output:
+403 forbidden customized page
+- lynx www.parikesit.abimanyu.E28.com/asdf
+expected output:
+404 not found customized page
+
+16.
+- lynx www.parikesit.abimanyu.E28.com/js
+expected output:
+several js file inside public/js
+
+17.
+- lynx www.rjp.baratayuda.abimanyu.E28.com:14000
+- lynx www.rjp.baratayuda.abimanyu.E28.com:14400
+expected output:
+several files inside rjp.baratayuda
+
+- lynx www.rjp.baratayuda.abimanyu.E28.com:8080
+expected output:
+wrong port, unable to connect to remote host
+
+note:
+authentication required
+Username: Wayang 
+Password: baratayudaE28
+
+18.
+- lynx www.rjp.baratayuda.abimanyu.E28.com:14000
+expected output:
+authentication required
+Username: Wayang 
+Password: baratayudaE28
+
+19.
+- lynx 192.220.1.4
+expected output:
+redirected to www.abimanyu.E28.com main page
+
+20.
+- lynx parikesit.abimanyu.E28.com/public/images/not-abimanyu.png
+expected output:
+redirected to parikesit.abimanyu.E28.com/public/images/abimanyu.png download page
+
+adjust titik
