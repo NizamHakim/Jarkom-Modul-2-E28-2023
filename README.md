@@ -505,19 +505,19 @@ File-file ini harus ada pada `/root` masing-masing node. File-file yang ada di `
   apt-get install unzip -y
 
   wget -O "x.zip" "https://drive.google.com/u/0/uc?id=1pPSP7yIR05JhSFG67RVzgkb-VcW9vQO6&export=download"
-  unzip /root/x.zip
+  unzip -o /root/x.zip
   rm /root/x.zip
 
   wget -O "x.zip" "https://drive.google.com/u/0/uc?id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS&export=download"
-  unzip /root/x.zip
+  unzip -o /root/x.zip
   rm /root/x.zip
 
   wget -O "x.zip" "https://drive.google.com/u/0/uc?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc&export=download"
-  unzip /root/x.zip
+  unzip -o /root/x.zip
   rm /root/x.zip
 
   wget -O "x.zip" "https://drive.google.com/u/0/uc?id=17tAM_XDKYWDvF-JJix1x7txvTBEax7vX&export=download"
-  unzip /root/x.zip
+  unzip -o /root/x.zip
   rm /root/x.zip
   ```
 - **initWebServer.sh**
@@ -610,7 +610,7 @@ File-file ini harus ada pada `/root` masing-masing node. File-file yang ada di `
   apt-get install wget -y
   apt-get install unzip -y
   wget -O "x.zip" "https://drive.google.com/u/0/uc?id=17tAM_XDKYWDvF-JJix1x7txvTBEax7vX&export=download"
-  unzip /root/x.zip
+  unzip -o /root/x.zip
   rm /root/x.zip
   ```
 - **initWebServer.sh**
@@ -671,7 +671,7 @@ File-file ini harus ada pada `/root` masing-masing node. File-file yang ada di `
   apt-get install wget -y
   apt-get install unzip -y
   wget -O "x.zip" "https://drive.google.com/u/0/uc?id=17tAM_XDKYWDvF-JJix1x7txvTBEax7vX&export=download"
-  unzip /root/x.zip
+  unzip -o /root/x.zip
   rm /root/x.zip
   ```
 - **initWebServer.sh**
