@@ -813,8 +813,10 @@ echo nameserver 192.220.2.2 > /etc/resolv.conf
 ```
 
 #### Testing:  
-Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.arjuna.E28.com` atau `ping www.arjuna.E28.com -c 5` pada NakulaClient dan SadewaClient
-(gambar)
+Untuk memeriksa, dapat dilakukan dengan `ping arjuna.E28.com` dan `ping www.arjuna.E28.com -c 5` pada NakulaClient dan SadewaClient
+![](/images/ping-arjuna.png)
+![](/images/ping-www.arjuna.png)
+
 ### No 3
 > Dengan cara yang sama seperti soal nomor 2, buatlah website utama dengan akses ke abimanyu.yyy.com dan alias www.abimanyu.yyy.com.
 
@@ -874,8 +876,9 @@ Untuk setting nameserver pada NakulaClient dan SadewaClient, arahkan nameserver 
 echo nameserver 192.220.2.2 > /etc/resolv.conf
 ```
 #### Testing:  
-Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.abimanyu.E28.com` atau `ping www.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
-(gambar)
+Untuk memeriksa, dapat dilakukan dengan `ping abimanyu.E28.com` atau `ping www.abimanyu.E28.com` pada NakulaClient dan SadewaClient
+![](/images/ping-abimanyu.png)
+![](/images/ping-www.abimanyu.png)
 ### No 4
 > Kemudian, karena terdapat beberapa web yang harus di-deploy, buatlah subdomain parikesit.abimanyu.yyy.com yang diatur DNS-nya di Yudhistira dan mengarah ke Abimanyu.
 
@@ -911,7 +914,8 @@ service bind9 restart
 ```
 
 Untuk memeriksa, dapat dilakukan dengan `host -t CNAME www.parikesit.abimanyu.E28.com` atau `ping www.parikesit.abimanyu.E28.com -c 5` pada NakulaClient dan SadewaClient
-(gambar)
+![](/images/ping-parikesit.png)
+![](/images/ping-www.parikesit.png)
 
 ### No 5
 > Buat juga reverse domain untuk domain utama. (Abimanyu saja yang direverse).
@@ -964,9 +968,9 @@ apt-get update
 apt-get install dnsutils
 
 //Kembalikan nameserver agar tersambung dengan EniesLobby
-host -t PTR "IP Yudhistira"
+host -t PTR 192.220.1.4
 ```
-(gambar)
+![](/images/ptr.png)
 ### No 6
 > Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
 
@@ -1020,7 +1024,7 @@ Pada Yudhistira, silakan matikan service bind9
 ```
 service bind9 stop
 ```
-
+![](/images/stop-DNSMaster.png)
 Pada Nakulaclient dan SadewaClient pastikan nameserver mengarah ke IP Yudhistira dan Werkudara
 ```
 # DNS Master
@@ -1028,6 +1032,8 @@ echo nameserver 192.220.2.2 > /etc/resolv.conf
 # DNS Slave
 echo nameserver 192.220.2.3 >> /etc/resolv.conf
 ```
+Ping ke `abimanyu.E28.com` dengan `ping abimanyu.E28.com -c 5`
+![](/images/ping-stop.png)
 ### No 7
 > Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
 
@@ -1092,23 +1098,251 @@ Restart service bind9
 service bind9 restart
 ```
 
+Periksa dengan menjalankan command berikut pada client:
+```
+ping baratayuda.abimanyu.E28.com
+ping www.baratayuda.abimanyu.E28.com
+```
+![](/images/ping-baratayuda.png)
+![](/images/ping-www.baratayuda.png)
 ### No 8
 > Untuk informasi yang lebih spesifik mengenai Ranjapan Baratayuda, buatlah subdomain melalui Werkudara dengan akses rjp.baratayuda.abimanyu.yyy.com dengan alias www.rjp.baratayuda.abimanyu.yyy.com yang mengarah ke Abimanyu.
 
 #### Answer:  
-#### Testing:  
+Pada werkudara, edit konfigurasi file `baratayuda.abimanyu.E28.com` seperti di bawah ini:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     baratayuda.abimanyu.E28.com. root.baratayuda.abimanyu.E28.com. (
+                   2022101001         ; Serial
+                       604800         ; Refresh
+                        86400         ; Retry
+                      2419200         ; Expire
+                       604800 )       ; Negative Cache TTL
+;
+@       IN      NS      baratayuda.abimanyu.E28.com.
+@       IN      A       192.220.1.4     ; IP Abimanyu
+www     IN      CNAME   baratayuda.abimanyu.E28.com.
+rjp     IN      A       192.220.1.4     ; IP Abimanyu
+www.rjp IN      CNAME   rjp.baratayuda.abimanyu.E28.com.
+@       IN      AAAA    ::1
+```
 
+#### Testing:  
+Restart service bind9
+```
+service bind9 restart
+```
+
+Periksa dengan menjalankan command berikut pada client:
+```
+ping rjp.baratayuda.abimanyu.E28.com
+ping www.rjp.baratayuda.abimanyu.E28.com
+```
+![](/images/ping-rjp.baratayuda.png)
+![](/images/ping-www.rjp.baratayuda.png)
 ### No 9
 > Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
 
-#### Answer:  
+#### Answer: 
+Install Nginx pada _Arjuna_ dengan command berikut:
+```
+apt-get update
+apt-get install nginx -y
+```
+
+Start Nginx
+```
+service nginx start
+```
+
+Buat file `nginx-lb-block` yang berisi
+```
+upstream myweb  {
+      server 192.220.1.4; #IP Abimanyu
+      server 192.220.1.5; #IP Prabukusuma
+      server 192.220.1.6; #IP Wisanggeni
+}
+
+server {
+      listen 80;
+      server_name arjuna.E28.com;
+
+      location / {
+      proxy_pass http://myweb;
+      }
+}
+```
+
+Lakukan konfigurasi pada nginx dengan meng-_copy_ file `/root/nginx-lb-block` ke file default dalam `sites-available` dengan perintah
+```
+cp /root/nginx-lb-block /etc/nginx/sites-available/default
+```
+
+Lalu buat symlink (link simbolik dari file konfigurasi Nginx yang berada di direktori `/etc/nginx/sites-available` ke direktori `/etc/nginx/sites-enabled`
+```
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled
+```
+
+Restart Nginx
+```
+service nginx restart
+```
 #### Testing:  
+(none)
 
 ### No 10
 > Kemudian gunakan algoritma Round Robin untuk Load Balancer pada Arjuna. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh: (Prabakusuma:8001, Abimanyu:8002, Wisanggeni:8003)
 
 #### Answer:  
+
+Lakukan konfigurasi pada setiap worker:
+_Prabukusuma_
+Buat file `nginx-block` pada Prabukusuma dengan `nano nginx-block` dan edit file seperti di bawah ini:
+```
+server {
+
+      listen 8001;
+
+      root /var/www/arjuna.E28;
+
+      index index.php index.html index.htm;
+      server_name _;
+
+      location / {
+                      try_files $uri $uri/ /index.php?$query_string;
+      }
+
+      # pass PHP scripts to FastCGI server
+      location ~ \.php$ {
+      include snippets/fastcgi-php.conf;
+      fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+      }
+
+location ~ /\.ht {
+                      deny all;
+      }
+
+      error_log /var/log/nginx/default_error.log;
+      access_log /var/log/nginx/default_access.log;
+}
+```
+
+Copy ke file default Nginx
+```
+cp /root/nginx-block /etc/nginx/sites-available/default
+```
+Lakukan symlink
+```
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled
+```
+
+Restart Nginx
+```
+service nginx restart
+```
+
+Periksa apakah bekerja
+```
+nginx -t
+```
+
+Lakukan hal yang sama untuk worker Wisanggeni dan Abimanyu
+_Abimanyu_
+File `arjuna-nginx-block` 
+```
+server {
+
+      listen 8002;
+
+      root /var/www/arjuna.E28;
+
+      index index.php index.html index.htm;
+      server_name _;
+
+      location / {
+                      try_files $uri $uri/ /index.php?$query_string;
+      }
+
+      location ~ \.php$ {
+      include snippets/fastcgi-php.conf;
+      fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+      }
+
+location ~ /\.ht {
+                      deny all;
+      }
+
+      error_log /var/log/nginx/default_error.log;
+      access_log /var/log/nginx/default_access.log;
+}
+```
+
+_Wisanggeni_
+File `nginx-block`
+```
+server {
+
+      listen 8003;
+
+      root /var/www/arjuna.E28;
+
+      index index.php index.html index.htm;
+      server_name _;
+
+      location / {
+                      try_files $uri $uri/ /index.php?$query_string;
+      }
+
+      # pass PHP scripts to FastCGI server
+      location ~ \.php$ {
+      include snippets/fastcgi-php.conf;
+      fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+      }
+
+location ~ /\.ht {
+                      deny all;
+      }
+
+      error_log /var/log/nginx/default_error.log;
+      access_log /var/log/nginx/default_access.log;
+}
+```
+
+Konfigurasi file `nginx-lb-block` pada Arjuna
+```
+upstream myweb  {
+      server 192.220.1.4:8002; #IP Abimanyu
+      server 192.220.1.5:8001; #IP Prabukusuma
+      server 192.220.1.6:8003; #IP Wisanggeni
+}
+
+server {
+      listen 80;
+      server_name arjuna.E28.com;
+
+      location / {
+      proxy_pass http://myweb;
+      }
+}
+```
+
 #### Testing:  
+Lakukan dengan menggunakan command berikut sebanyak 3 kali pada client:
+```
+lynx arjuna.E28.com
+```
+
+_Abimanyu_
+![](/images/abimanyu-worker.png)
+
+_Prabukusuma_
+![](/images/prabukusuma-worker.png)
+
+_Wisanggeni_
+![](/images/wisanggeni-worker.png)
 
 ### No 11
 > Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server www.abimanyu.yyy.com. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy.
