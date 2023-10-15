@@ -1502,7 +1502,6 @@ Gunakan `lynx` pada NakulaClient untuk mengakses file pada parikesit.abimanyu.E2
 lynx parikesit.abimanyu.E28.com/public/images/not-abimanyu.png
 lynx parikesit.abimanyu.E28.com/public/images/abimanyu-student.jpg
 lynx parikesit.abimanyu.E28.com/public/images/abimanyu.png
-lynx parikesit.abimanyu.E28.com/public/images/notabimanyujustmuseum.177013
 ```
 Menampilkan halaman download abimanyu.png karena telah dialihkan menuju `parikesit.abimanyu.E28.com/public/images/abimanyu.png`  
 
